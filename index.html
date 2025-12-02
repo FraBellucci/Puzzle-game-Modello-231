@@ -315,7 +315,8 @@
                 });
 
                 if (grid[i] !== null) {
-                    const piece = createPieceElement(grid[i], true);
+                    const pieceData = pieces.find(p => p.id === grid[i]);
+                    const piece = createPieceElement(pieceData, true);
                     slot.appendChild(piece);
                     slot.classList.add('filled');
                 }
