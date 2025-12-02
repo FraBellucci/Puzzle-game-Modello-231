@@ -117,6 +117,9 @@
             padding: 3px;
             border-radius: 10px;
             margin-bottom: 20px;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .puzzle-slot {
@@ -338,12 +341,17 @@
             div.className = 'puzzle-piece';
             div.draggable = true;
             div.dataset.id = piece.id;
+            div.dataset.correctPos = piece.correctPosition;
 
             const row = Math.floor(piece.correctPosition / COLS);
             const col = piece.correctPosition % COLS;
             
+            const bgPosX = (col * 100) / (COLS - 1);
+            const bgPosY = (row * 100) / (ROWS - 1);
+            
             div.style.backgroundImage = 'url(puzzle-231.png)';
-            div.style.backgroundPosition = `${(col * 100) / (COLS - 1)}% ${(row * 100) / (ROWS - 1)}%`;
+            div.style.backgroundPosition = `${bgPosX}% ${bgPosY}%`;
+            div.style.backgroundRepeat = 'no-repeat';
 
             div.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('pieceId', piece.id);
