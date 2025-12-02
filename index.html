@@ -356,6 +356,13 @@
 
             div.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('pieceId', piece.id);
+                
+                // If piece is in grid, store its position
+                if (inGrid) {
+                    const position = grid.indexOf(piece.id);
+                    e.dataTransfer.setData('fromPosition', position);
+                }
+                
                 div.classList.add('dragging');
             });
 
@@ -364,8 +371,7 @@
             });
 
             if (inGrid) {
-                div.onclick = () => returnToPool(piece.id);
-                div.style.cursor = 'pointer';
+                div.style.cursor = 'move'; // Changed from 'pointer'
             }
 
             return div;
@@ -373,11 +379,22 @@
 
         function handleDrop(e, position) {
             const pieceId = parseInt(e.dataTransfer.getData('pieceId'));
+            const fromPosition = parseInt(e.dataTransfer.getData('fromPosition'));
+            
+            // If piece is already in grid, remove it from old position
+            if (!isNaN(fromPosition) && fromPosition !== position) {
+                grid[fromPosition] = null;
+            }
             
             // Check if slot is empty
             if (grid[position] === null) {
                 grid[position] = pieceId;
-                placedPieces++;
+                
+                // Only increment if piece came from pool
+                if (isNaN(fromPosition)) {
+                    placedPieces++;
+                }
+                
                 moves++;
                 updateStats();
                 renderGrid();
